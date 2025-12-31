@@ -1,18 +1,20 @@
 from django.urls import path
 from . import views  
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path('', views.home, name='home'),
     path('about/', views.about, name='about'),
     path('contact/', views.contact, name='contact'),
     path('services/', views.services, name='services'),
+    path('intern/', views.internshipdetails, name='intern'),
+
+    # Blog list and detail
     path('blog/', views.blog_list, name='blog_list'),
     path('blog/<slug:slug>/', views.blog_detail, name='blog_detail'),
-    path('intern/', views.internshipdetails, name='intern'),
 ]
 
-from django.views.generic import RedirectView
-
+# Redirects without trailing slash to the proper URL
 urlpatterns += [
     path('about', RedirectView.as_view(url='/about/', permanent=True)),
     path('contact', RedirectView.as_view(url='/contact/', permanent=True)),

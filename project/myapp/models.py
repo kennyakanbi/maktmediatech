@@ -1,5 +1,10 @@
-from django.db import models
 from django.utils.text import slugify
+from django.db import models
+from django.contrib.auth.models import User
+from cloudinary.models import CloudinaryField
+from django.utils import timezone
+
+
 
 
 class Contact(models.Model):
@@ -19,26 +24,31 @@ class Contact(models.Model):
 
 
 class Blog(models.Model):
-    title = models.CharField(max_length=150)
-    slug = models.SlugField(unique=True, blank=True, null=True)
+    author_name = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True, blank=True)
     description = models.TextField()
-    content = models.TextField()
-    author_name = models.CharField(max_length=50)
-    image = models.ImageField(upload_to="blog_images/", blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ["-created_at"]
-        verbose_name = "Blog Post"
-        verbose_name_plural = "Blog Posts"
-
-    def __str__(self):
-        return self.title
+    image = models.ImageField(upload_to='blog_images/', blank=True, null=True)
+    date_created = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.title
+
+
+
+
+
+class BlogImage(models.Model):
+    blog = models.ForeignKey(Blog, on_delete=models.CASCADE, related_name='extra_images')
+    image = CloudinaryField('extra image')
+
+    def __str__(self):
+        return f"Extra image for {self.blog.title}"
 
 
 class Internship(models.Model):

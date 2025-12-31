@@ -1,0 +1,99 @@
+{% extends "basic.html" %}
+{% load static %}
+{% block title %}Blog{% endblock title %}
+
+{% block body %}
+
+<main class="main">
+
+  <!-- Page Title -->
+  <div class="page-title dark-background" data-aos="fade"
+       style="background-image: url({% static 'assets/img/write.jpg' %}); background-size: cover; background-position: center;">
+    <div class="container position-relative text-white py-5">
+      <h1 class="fw-bold">Stay Up-To-Date With The Latest Trends in Digital Marketing and Technology</h1>
+      <p>Mak Media Tech Blog on Industrial News, Insights, and Updates</p>
+      <nav class="breadcrumbs">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+          <li class="breadcrumb-item active">Blog</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Section Title -->
+  <div class="container section-title py-5" data-aos="fade-up">
+    <h2 class="h1-color text-center fw-bold">Welcome to Mak Media Tech Blog</h2>
+    <p class="text-center mt-3">
+      At Mak Media Tech, we believe technology and media are powerful tools for transformation.
+      Our blog shares insights across emerging technologies, digital media, entrepreneurship, and African innovation.
+    </p>
+  </div>
+
+  <!-- Blog Posts Section -->
+  <section id="blog-posts" class="blog-posts section py-5">
+    <div class="container">
+      <div class="row g-4">
+        {% for post in posts %}
+          <div class="col-lg-4 col-md-6">
+            <article class="blog-card h-100 shadow-sm rounded overflow-hidden border">
+
+           <div class="post-img position-relative">
+  <a href="{% url 'blog_detail' post.slug %}">
+    {% if post.image %}
+      <img src="{{ post.image.url }}" class="img-fluid w-100" alt="{{ post.title }}">
+    {% else %}
+      <img src="{% static 'assets/img/default.jpg' %}" class="img-fluid w-100" alt="No image available">
+    {% endif %}
+  </a>
+</div>
+
+              <!-- Post Content -->
+              <div class="p-3 d-flex flex-column h-100">
+                <div class="meta small text-muted mb-2">
+                  <span><i class="bi bi-calendar"></i> {{ post.date_created|date:"M d, Y" }}</span> &nbsp;|&nbsp;
+                  <span><i class="bi bi-person"></i> {{ post.author_name }}</span>
+                </div>
+                
+            <a href="{% url 'blog_detail' post.slug %}"
+   class="text-decoration-none text-dark d-block">
+  <h3 class="post-title">{{ post.title }}</h3>
+  <p class="text-truncate">
+    {{ post.description|truncatechars:100 }}
+  </p>
+</a>
+
+
+                <a href="{% url 'blog_detail' post.slug %}" class="mt-auto btn btn-outline-primary btn-sm align-self-start">
+                  Read More <i class="bi bi-arrow-right"></i>
+                </a>
+              </div>
+            </article>
+          </div>
+        {% empty %}
+          <div class="col-12 text-center">
+            <p>No blog posts available yet.</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Optional custom styles -->
+<style>
+  .blog-card img {
+    height: 220px;
+    object-fit: cover;
+  }
+  .text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+</style>
+
+{% endblock body %}

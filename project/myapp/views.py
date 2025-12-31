@@ -4,17 +4,30 @@ from django.shortcuts import render, get_object_or_404
 from myapp.models import Contact, Blog, Internship
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+from django.shortcuts import render, get_object_or_404
+from .models import Blog
 
 def home(request):
     return render(request, 'home.html')
 
 def blog_list(request):
-    posts = Blog.objects.all()
-    return render(request, "blog_list.html", {"posts": posts})
+    posts = Blog.objects.all().order_by('-date_created')
+    return render(request, 'myapp/blog_list.html', {'posts': posts})
+
+from django.shortcuts import render, get_object_or_404
+from .models import Blog
 
 def blog_detail(request, slug):
-    post = get_object_or_404(Blog, slug=slug)
-    return render(request, "blog_detail.html", {"post": post})
+    blog = get_object_or_404(Blog, slug=slug)
+    # Get latest 5 blogs for sidebar (excluding current blog)
+    recent_blogs = Blog.objects.exclude(id=blog.id).order_by('-date_created')[:5]
+    
+    context = {
+        'blog': blog,
+        'blogs': recent_blogs
+    }
+    return render(request, 'myapp/blog_detail.html', context)
+
 
 def about(request):
     return render(request, 'about.html')
