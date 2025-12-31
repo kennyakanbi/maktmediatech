@@ -2,34 +2,31 @@ from pathlib import Path
 from django.contrib.messages import constants as messages
 import os
 import dj_database_url
-
+from decouple import config
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 DEBUG = True  # local only
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    'default': dj_database_url.config(
+        default=config(
+            'DATABASE_URL',
+            default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
+        )
+    )
 }
 
-if not DEBUG and os.environ.get("DATABASE_URL"):
-    DATABASES["default"] = dj_database_url.config(
-        conn_max_age=600,
-        ssl_require=True
-    )
 
 # =====================
 # SECURITY
 # =====================
-SECRET_KEY = os.getenv(
-    "SECRET_KEY",
-    "unsafe-secret-key-for-local-only"
-)
+SECRET_KEY = config('SECRET_KEY')
 
-ALLOWED_HOSTS = ["*"]
+DEBUG = config('DEBUG', default=False, cast=bool)
+
+ALLOWED_HOSTS = ['*']
+
 
 
 # =====================
@@ -49,10 +46,12 @@ INSTALLED_APPS = [
 ]
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
-    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+    'CLOUD_NAME': config('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': config('CLOUDINARY_API_KEY'),
+    'API_SECRET': config('CLOUDINARY_API_SECRET'),
 }
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # =====================
 # MIDDLEWARE
@@ -118,8 +117,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]  # for project-wide static files
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")    # for collectstatic (production)
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # =====================
