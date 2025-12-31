@@ -8,12 +8,13 @@ from decouple import config
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 DEBUG = True  # local only
+
+
 DATABASES = {
-    'default': dj_database_url.config(
-        default=config(
-            'DATABASE_URL',
-            default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
-        )
+    "default": dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,
+        ssl_require=True,
     )
 }
 
