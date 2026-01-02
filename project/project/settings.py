@@ -36,6 +36,7 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SAMESITE = None
 CSRF_COOKIE_SAMESITE = None
+SECURE_SSL_REDIRECT = True
 
 # Optional: for subdomain support
 # SESSION_COOKIE_DOMAIN = ".maktmediatech.onrender.com"
@@ -175,3 +176,4 @@ MESSAGES_TAGS = {messages.ERROR: "danger"}
 
 LOGIN_REDIRECT_URL = "/admin/"
 LOGOUT_REDIRECT_URL = "/admin/login/"
+
