@@ -5,7 +5,7 @@ import os
 User = get_user_model()
 
 class Command(BaseCommand):
-    help = "Create superuser if not exists"
+    help = "Create superuser automatically (Render safe)"
 
     def handle(self, *args, **kwargs):
         username = os.environ.get("DJANGO_SUPERUSER_USERNAME")
@@ -13,11 +13,11 @@ class Command(BaseCommand):
         password = os.environ.get("DJANGO_SUPERUSER_PASSWORD")
 
         if not username or not password:
-            self.stdout.write("Superuser env vars not set")
+            self.stdout.write(self.style.ERROR("Superuser env vars not set"))
             return
 
         if User.objects.filter(username=username).exists():
-            self.stdout.write("Superuser already exists")
+            self.stdout.write(self.style.WARNING("Superuser already exists"))
             return
 
         User.objects.create_superuser(
@@ -25,4 +25,5 @@ class Command(BaseCommand):
             email=email,
             password=password
         )
-        self.stdout.write("Superuser created")
+
+        self.stdout.write(self.style.SUCCESS("Superuser created successfully"))
