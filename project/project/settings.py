@@ -17,28 +17,23 @@ DEBUG = config("DEBUG", default=False, cast=bool)
 
 ALLOWED_HOSTS = [
     "maktmediatech.onrender.com",
-    "127.0.0.1",
-    "localhost",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://maktmediatech.onrender.com",
 ]
 
-# Security for Render
+# HTTPS behind Render proxy
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-SESSION_COOKIE_SECURE = True        # keep True
-CSRF_COOKIE_SECURE = True           # keep True
-
-# These fixes ensure cookies work over HTTPS behind Render's proxy
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SAMESITE = None
 CSRF_COOKIE_SAMESITE = None
 
-# Optional: if you still get login redirect loops, try:
+# Optional: for subdomain support
 # SESSION_COOKIE_DOMAIN = ".maktmediatech.onrender.com"
 # CSRF_COOKIE_DOMAIN = ".maktmediatech.onrender.com"
-
 
 # =====================
 # DATABASE
@@ -66,7 +61,7 @@ INSTALLED_APPS = [
     "cloudinary",
     "cloudinary_storage",
 
-    # Local apps (only once!)
+    # Local apps
     "myapp.apps.MyappConfig",
     "main",
 ]
@@ -135,7 +130,7 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# Use WhiteNoise for static files in Render
+# Whitenoise for production
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # =====================
@@ -160,4 +155,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # =====================
 MESSAGES_TAGS = {messages.ERROR: "danger"}
 
+# Append slash if missing in URLs
 APPEND_SLASH = True
