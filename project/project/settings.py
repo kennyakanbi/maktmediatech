@@ -1,9 +1,9 @@
 import os
 from pathlib import Path
+
+from decouple import config
 from django.contrib.messages import constants as messages
 import dj_database_url
-from decouple import config
-
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,7 +26,6 @@ CSRF_TRUSTED_ORIGINS = [
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-
 # =====================
 # DATABASE
 # =====================
@@ -41,24 +40,25 @@ DATABASES = {
 # APPLICATIONS
 # =====================
 INSTALLED_APPS = [
+    # Django core
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "myapp.apps.MyappConfig",  # 👈 IMPORTANT
+
     # Third-party
     "cloudinary",
     "cloudinary_storage",
 
-    # Local apps
-    "myapp",
+    # Local apps (REGISTER ONCE ONLY)
+    "myapp.apps.MyappConfig",
     "main",
 ]
 
 # =====================
-# CLOUDINARY (MEDIA FILES)
+# CLOUDINARY (MEDIA)
 # =====================
 CLOUDINARY_STORAGE = {
     "CLOUD_NAME": config("CLOUDINARY_CLOUD_NAME"),
@@ -68,7 +68,7 @@ CLOUDINARY_STORAGE = {
 
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
-MEDIA_URL = "/media/"  # logical only, Cloudinary handles storage
+MEDIA_URL = "/media/"
 
 # =====================
 # MIDDLEWARE
@@ -96,7 +96,7 @@ WSGI_APPLICATION = "project.wsgi.application"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
