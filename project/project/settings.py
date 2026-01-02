@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-
 from decouple import config
 from django.contrib.messages import constants as messages
 import dj_database_url
@@ -8,7 +7,7 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # =====================
-# SECURITY
+# SECURITYs
 # =====================
 SECRET_KEY = config("SECRET_KEY")
 
@@ -157,3 +156,11 @@ MESSAGES_TAGS = {
 }
 
 APPEND_SLASH = True
+
+
+# Security for Render
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = "Lax"
+SESSION_COOKIE_SAMESITE = "Lax"
