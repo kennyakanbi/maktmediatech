@@ -155,5 +155,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # =====================
 MESSAGES_TAGS = {messages.ERROR: "danger"}
 
-# Append slash if missing in URLs
-APPEND_SLASH = True
+LOGIN_REDIRECT_URL = "/admin/"
+LOGOUT_REDIRECT_URL = "/admin/login/"
