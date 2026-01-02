@@ -4,13 +4,15 @@ from decouple import config
 from django.contrib.messages import constants as messages
 import dj_database_url
 
+# =====================
+# BASE DIR
+# =====================
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # =====================
-# SECURITYs
+# SECURITY
 # =====================
 SECRET_KEY = config("SECRET_KEY")
-
 DEBUG = config("DEBUG", default=False, cast=bool)
 
 ALLOWED_HOSTS = [
@@ -23,7 +25,12 @@ CSRF_TRUSTED_ORIGINS = [
     "https://maktmediatech.onrender.com",
 ]
 
+# Render HTTPS settings
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = "Lax"
+SESSION_COOKIE_SAMESITE = "Lax"
 
 # =====================
 # DATABASE
@@ -51,23 +58,10 @@ INSTALLED_APPS = [
     "cloudinary",
     "cloudinary_storage",
 
-    # Local apps (REGISTER ONCE ONLY)
+    # Local apps (only once!)
     "myapp.apps.MyappConfig",
     "main",
 ]
-
-# =====================
-# CLOUDINARY (MEDIA)
-# =====================
-CLOUDINARY_STORAGE = {
-    "CLOUD_NAME": config("CLOUDINARY_CLOUD_NAME"),
-    "API_KEY": config("CLOUDINARY_API_KEY"),
-    "API_SECRET": config("CLOUDINARY_API_SECRET"),
-}
-
-DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
-
-MEDIA_URL = "/media/"
 
 # =====================
 # MIDDLEWARE
@@ -127,21 +121,26 @@ USE_I18N = True
 USE_TZ = True
 
 # =====================
-# STATIC FILES (WHITENOISE)
+# STATIC FILES
 # =====================
 STATIC_URL = "/static/"
-
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
-
+STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-STORAGES = {
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
+# Use WhiteNoise for static files in Render
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+# =====================
+# MEDIA FILES (Cloudinary)
+# =====================
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": config("CLOUDINARY_CLOUD_NAME"),
+    "API_KEY": config("CLOUDINARY_API_KEY"),
+    "API_SECRET": config("CLOUDINARY_API_SECRET"),
 }
+
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+MEDIA_URL = "/media/"
 
 # =====================
 # DEFAULT PK
@@ -151,16 +150,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # =====================
 # MESSAGES
 # =====================
-MESSAGES_TAGS = {
-    messages.ERROR: "danger",
-}
+MESSAGES_TAGS = {messages.ERROR: "danger"}
 
 APPEND_SLASH = True
-
-
-# Security for Render
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-CSRF_COOKIE_SAMESITE = "Lax"
-SESSION_COOKIE_SAMESITE = "Lax"
