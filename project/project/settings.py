@@ -25,12 +25,20 @@ CSRF_TRUSTED_ORIGINS = [
     "https://maktmediatech.onrender.com",
 ]
 
-# Render HTTPS settings
+# Security for Render
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-CSRF_COOKIE_SAMESITE = "Lax"
-SESSION_COOKIE_SAMESITE = "Lax"
+
+SESSION_COOKIE_SECURE = True        # keep True
+CSRF_COOKIE_SECURE = True           # keep True
+
+# These fixes ensure cookies work over HTTPS behind Render's proxy
+SESSION_COOKIE_SAMESITE = None
+CSRF_COOKIE_SAMESITE = None
+
+# Optional: if you still get login redirect loops, try:
+# SESSION_COOKIE_DOMAIN = ".maktmediatech.onrender.com"
+# CSRF_COOKIE_DOMAIN = ".maktmediatech.onrender.com"
+
 
 # =====================
 # DATABASE
