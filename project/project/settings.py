@@ -3,6 +3,10 @@ from pathlib import Path
 from decouple import config
 from django.contrib.messages import constants as messages
 import dj_database_url
+from django.core.management.utils import get_random_secret_key
+
+SECRET_KEY = os.environ.get("SECRET_KEY")
+
 
 # =====================
 # BASE DIR
