@@ -20,7 +20,9 @@ SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", default=False, cast=bool)
 
 ALLOWED_HOSTS = [
-    "maktmediatech.onrender.com",
+        "maktmediatech.onrender.com",
+    "127.0.0.1",
+    "localhost",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -42,12 +44,26 @@ CSRF_COOKIE_SAMESITE = None
 # =====================
 # DATABASE
 # =====================
-DATABASES = {
-    "default": dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=600,
-    )
-}
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+if os.environ.get("DATABASE_URL"):
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=os.environ.get("DATABASE_URL"),
+            conn_max_age=600,
+            ssl_require=True,
+        )
+    }
+else:
+    # Local development with SQLite
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+
+
 
 # =====================
 # APPLICATIONS
