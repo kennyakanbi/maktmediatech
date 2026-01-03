@@ -1,15 +1,11 @@
 import os
 from pathlib import Path
 from decouple import config
-from django.contrib.messages import constants as messages
 import dj_database_url
-from django.core.management.utils import get_random_secret_key
-
-SECRET_KEY = os.environ.get("SECRET_KEY")
-
+from django.contrib.messages import constants as messages
 
 # =====================
-# BASE DIR
+# BASE DIRECTORY
 # =====================
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -17,58 +13,62 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY
 # =====================
 SECRET_KEY = config("SECRET_KEY")
-DEBUG = config("DEBUG", default=False, cast=bool)
+DEBUG = config("DEBUG", default=True, cast=bool)
 
 ALLOWED_HOSTS = [
-        "maktmediatech.onrender.com", "www.makmedia.tech", 
-        "localhost",  "127.0.0.1",
+    "127.0.0.1",
+    "localhost",
+    "maktmediatech.onrender.com",
+    "www.makmedia.tech",
+    "makmedia.tech",
 ]
 
+# Trusted origins for CSRF
 CSRF_TRUSTED_ORIGINS = [
+    "http://127.0.0.1:8000",
     "https://maktmediatech.onrender.com",
     "https://www.makmedia.tech",
 ]
 
-SESSION_COOKIE_DOMAIN = ".makmedia.tech"
-CSRF_COOKIE_DOMAIN = ".makmedia.tech"
+# Detect if running on Render (production)
+ON_RENDER = "RENDER" in os.environ
 
-# HTTPS behind Render proxy
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SAMESITE = None
-CSRF_COOKIE_SAMESITE = None
-SECURE_SSL_REDIRECT = True
-
-# Optional: for subdomain support
-# SESSION_COOKIE_DOMAIN = ".maktmediatech.onrender.com"
-# CSRF_COOKIE_DOMAIN = ".maktmediatech.onrender.com"
+# =====================
+# SECURITY SETTINGS
+# =====================
+if ON_RENDER:
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SAMESITE = None
+    SESSION_COOKIE_DOMAIN = ".makmedia.tech"
+    CSRF_COOKIE_DOMAIN = ".makmedia.tech"
+else:
+    # Local development
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SAMESITE = "Lax"
 
 # =====================
 # DATABASE
 # =====================
+DATABASES = {}
 if os.environ.get("DATABASE_URL"):
-    DATABASES = {
-        "default": dj_database_url.config(
-            default=os.environ.get("DATABASE_URL"),
-            conn_max_age=600,
-            ssl_require=False,
-        )
-    }
+    DATABASES["default"] = dj_database_url.config(
+        default=os.environ.get("DATABASE_URL"),
+        conn_max_age=600,
+        ssl_require=ON_RENDER,  # SSL only in production
+    )
 else:
-    # Local development with SQLite
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
+    DATABASES["default"] = {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
-
-
 
 # =====================
-# APPLICATIONS
+# INSTALLED APPS
 # =====================
 INSTALLED_APPS = [
     # Django core
@@ -151,8 +151,6 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
-
-# Whitenoise for production
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # =====================
@@ -163,19 +161,23 @@ CLOUDINARY_STORAGE = {
     "API_KEY": config("CLOUDINARY_API_KEY"),
     "API_SECRET": config("CLOUDINARY_API_SECRET"),
 }
-
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 MEDIA_URL = "/media/"
 
 # =====================
-# DEFAULT PK
+# AUTH / ADMIN
+# =====================
+LOGIN_REDIRECT_URL = "/admin/"
+LOGOUT_REDIRECT_URL = "/admin/login/"
+
+# =====================
+# DEFAULT PRIMARY KEY
 # =====================
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # =====================
 # MESSAGES
 # =====================
-MESSAGES_TAGS = {messages.ERROR: "danger"}
-
-LOGIN_REDIRECT_URL = "/admin/"
-LOGOUT_REDIRECT_URL = "/admin/login/"
+MESSAGES_TAGS = {
+    messages.ERROR: "danger",
+}
