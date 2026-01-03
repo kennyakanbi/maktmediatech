@@ -20,14 +20,17 @@ SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", default=False, cast=bool)
 
 ALLOWED_HOSTS = [
-        "maktmediatech.onrender.com",
-    "127.0.0.1",
-    "localhost",
+        "maktmediatech.onrender.com", "www.makmedia.tech", 
+        "localhost",  "127.0.0.1",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://maktmediatech.onrender.com",
+    "https://www.makmedia.tech",
 ]
+
+SESSION_COOKIE_DOMAIN = ".makmedia.tech"
+CSRF_COOKIE_DOMAIN = ".makmedia.tech"
 
 # HTTPS behind Render proxy
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
@@ -176,4 +179,3 @@ MESSAGES_TAGS = {messages.ERROR: "danger"}
 
 LOGIN_REDIRECT_URL = "/admin/"
 LOGOUT_REDIRECT_URL = "/admin/login/"
-
