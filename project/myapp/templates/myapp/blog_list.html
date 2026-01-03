@@ -38,15 +38,21 @@
           <div class="col-lg-4 col-md-6">
             <article class="blog-card h-100 shadow-sm rounded overflow-hidden border">
 
-           <div class="post-img position-relative">
-  <a href="{% url 'blog_detail' post.slug %}">
-    {% if post.image %}
-      <img src="{{ post.image.url }}" class="img-fluid w-100" alt="{{ post.title }}">
-    {% else %}
-      <img src="{% static 'assets/img/default.jpg' %}" class="img-fluid w-100" alt="No image available">
-    {% endif %}
-  </a>
-</div>
+              <!-- Post Image -->
+              <div class="post-img position-relative">
+                <a href="{% url 'blog_detail' post.slug %}">
+                  {% if post.image %}
+                    <img src="{{ post.image.url }}" class="img-fluid w-100" alt="{{ post.title }}">
+                  {% else %}
+                    <img src="{% static 'assets/img/default.jpg' %}" class="img-fluid w-100" alt="No image available">
+                  {% endif %}
+
+                  <!-- Extra Images -->
+                  {% for img in post.extra_images.all %}
+                    <img src="{{ img.image.url }}" class="img-fluid mt-2" alt="Extra image for {{ post.title }}">
+                  {% endfor %}
+                </a>
+              </div>
 
               <!-- Post Content -->
               <div class="p-3 d-flex flex-column h-100">
@@ -54,15 +60,11 @@
                   <span><i class="bi bi-calendar"></i> {{ post.date_created|date:"M d, Y" }}</span> &nbsp;|&nbsp;
                   <span><i class="bi bi-person"></i> {{ post.author_name }}</span>
                 </div>
-                
-            <a href="{% url 'blog_detail' post.slug %}"
-   class="text-decoration-none text-dark d-block">
-  <h3 class="post-title">{{ post.title }}</h3>
-  <p class="text-truncate">
-    {{ post.description|truncatechars:100 }}
-  </p>
-</a>
 
+                <a href="{% url 'blog_detail' post.slug %}" class="text-decoration-none text-dark d-block">
+                  <h3 class="post-title">{{ post.title }}</h3>
+                  <p class="text-truncate">{{ post.description|truncatechars:100 }}</p>
+                </a>
 
                 <a href="{% url 'blog_detail' post.slug %}" class="mt-auto btn btn-outline-primary btn-sm align-self-start">
                   Read More <i class="bi bi-arrow-right"></i>
@@ -93,6 +95,9 @@
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
+  }
+  .post-img img {
+    border-radius: 4px;
   }
 </style>
 
