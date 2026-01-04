@@ -7,6 +7,6 @@ def seed_blogs():
 
     Blog.objects.create(
         title="Welcome to Mak Media Tech Blog",
-        body="This is our official blog where we share insights on media, technology, advertising, and digital growth.",
+        description="This is our official blog where we share insights on media, technology, advertising, and digital growth.",
         slug=slugify("Welcome to Mak Media Tech Blog"),
     )
