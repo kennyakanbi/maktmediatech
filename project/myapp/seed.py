@@ -1,11 +1,12 @@
 from myapp.models import Blog
+from django.utils.text import slugify
 
 def seed_blogs():
     if Blog.objects.exists():
         return
 
     Blog.objects.create(
-        title="Media Advertising Campaigns — Let the World Notice You",
-        content="Your full blog content here...",
-        published=True
+        title="Welcome to Mak Media Tech Blog",
+        body="This is our official blog where we share insights on media, technology, advertising, and digital growth.",
+        slug=slugify("Welcome to Mak Media Tech Blog"),
     )
