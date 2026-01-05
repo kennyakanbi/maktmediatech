@@ -28,9 +28,8 @@ class Blog(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True, blank=True)
     description = models.TextField()
-    image = models.ImageField(upload_to='blog_images/', blank=True, null=True)
-    date_created = models.DateTimeField(auto_now_add=True)
     image = CloudinaryField('blog_image', blank=True, null=True)
+    date_created = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
