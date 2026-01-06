@@ -1,14 +1,16 @@
+# myapp/apps.py
 from django.apps import AppConfig
+from django.contrib.auth.models import User
 
 class MyappConfig(AppConfig):
-    default_auto_field = "django.db.models.BigAutoField"
-    name = "myapp"
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'myapp'
 
     def ready(self):
-        import os
-        if os.environ.get("RENDER"):
-            try:
-                from django.core.management import call_command
-                call_command("create_default_superuser")
-            except Exception:
-                pass
+        # Only create superuser if it doesn't exist
+        if not User.objects.filter(username="admin").exists():
+            User.objects.create_superuser(
+                username="kenny",
+                email="kennyakanbi@gmail.com",
+                password="makmedia"
+            )
