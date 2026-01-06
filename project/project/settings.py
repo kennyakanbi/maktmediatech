@@ -9,12 +9,16 @@ from django.contrib.messages import constants as messages
 # =====================
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# =====================
-# SECURITY
-# =====================
-SECRET_KEY = config("SECRET_KEY")
-DEBUG = config("DEBUG", default=True, cast=bool)
 
+# Detect if running on Render (production)
+ON_RENDER = "RENDER" in os.environ
+
+
+# -----------------------------
+# General
+# -----------------------------
+DEBUG = os.environ.get("DEBUG", "False") == "True"
+SECRET_KEY = os.environ.get("SECRET_KEY")
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
@@ -23,52 +27,39 @@ ALLOWED_HOSTS = [
     "makmedia.tech",
 ]
 
-# Trusted origins for CSRF
-CSRF_TRUSTED_ORIGINS = [
-    "http://127.0.0.1:8000",
-    "https://maktmediatech.onrender.com",
-    "https://www.makmedia.tech",
-]
 
-# Detect if running on Render (production)
-ON_RENDER = "RENDER" in os.environ
+# -----------------------------
+# Database (PostgreSQL / DATABASE_URL)
+# -----------------------------
+import dj_database_url
+DATABASES = {
+    "default": dj_database_url.config(conn_max_age=600, ssl_require=True)
+}
 
-# =====================
-# SECURITY SETTINGS
-# =====================
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+
+# -----------------------------
+# Security & HTTPS (Render)
+# -----------------------------
+# Detect if running on Render
+ON_RENDER = os.environ.get("RENDER") == "true"
+
 if ON_RENDER:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SAMESITE = "Lax"   # important for login to work
+    CSRF_COOKIE_SAMESITE = "Lax"
+    SESSION_COOKIE_DOMAIN = ".makmedia.tech"
+    CSRF_COOKIE_DOMAIN = ".makmedia.tech"
 
-    # only set domain if using your custom domain
-    if "makmedia.tech" in os.environ.get("RENDER_EXTERNAL_HOSTNAME", ""):
-        SESSION_COOKIE_DOMAIN = ".makmedia.tech"
-        CSRF_COOKIE_DOMAIN = ".makmedia.tech"
-    else:
-        SESSION_COOKIE_DOMAIN = None
-        CSRF_COOKIE_DOMAIN = None
+# -----------------------------
+# Static files
+# -----------------------------
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_URL = "/static/"
 
-    SESSION_COOKIE_SAMESITE = "Lax"
-
-
-
-# =====================
-# DATABASE
-# =====================
-DATABASES = {}
-if os.environ.get("DATABASE_URL"):
-    DATABASES["default"] = dj_database_url.config(
-        default=os.environ.get("DATABASE_URL"),
-        conn_max_age=600,
-        ssl_require=ON_RENDER,  # SSL only in production
-    )
-else:
-    DATABASES["default"] = {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
 
 # =====================
 # INSTALLED APPS
@@ -148,24 +139,6 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-# =====================
-# STATIC FILES
-# =====================
-STATIC_ROOT = BASE_DIR / "staticfiles"
-STATIC_URL = "/static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
-# =====================
-# MEDIA FILES (Cloudinary)
-# =====================
-CLOUDINARY_STORAGE = {
-    "CLOUD_NAME": config("CLOUDINARY_CLOUD_NAME"),
-    "API_KEY": config("CLOUDINARY_API_KEY"),
-    "API_SECRET": config("CLOUDINARY_API_SECRET"),
-}
-DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
-MEDIA_URL = "/media/"
 
 # =====================
 # AUTH / ADMIN
