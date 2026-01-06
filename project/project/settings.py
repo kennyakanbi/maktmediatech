@@ -41,9 +41,17 @@ if ON_RENDER:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SAMESITE = "None"
-    SESSION_COOKIE_DOMAIN = None
-    CSRF_COOKIE_DOMAIN = None
+
+    # only set domain if using your custom domain
+    if "makmedia.tech" in os.environ.get("RENDER_EXTERNAL_HOSTNAME", ""):
+        SESSION_COOKIE_DOMAIN = ".makmedia.tech"
+        CSRF_COOKIE_DOMAIN = ".makmedia.tech"
+    else:
+        SESSION_COOKIE_DOMAIN = None
+        CSRF_COOKIE_DOMAIN = None
+
+    SESSION_COOKIE_SAMESITE = "Lax"
+
 
 
 # =====================
