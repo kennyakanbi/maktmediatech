@@ -5,8 +5,6 @@ from cloudinary.models import CloudinaryField
 from django.utils import timezone
 
 
-
-
 class Contact(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
@@ -23,13 +21,20 @@ class Contact(models.Model):
         return f"{self.name} - {self.email}"
 
 
+
+
+
 class Blog(models.Model):
     author_name = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True, blank=True)
     description = models.TextField()
+    # Use only CloudinaryField for images
     image = CloudinaryField('blog_image', blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-date_created"]
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -38,9 +43,6 @@ class Blog(models.Model):
 
     def __str__(self):
         return self.title
-
-
-
 
 
 class BlogImage(models.Model):

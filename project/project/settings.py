@@ -4,21 +4,21 @@ from decouple import config
 import dj_database_url
 from django.contrib.messages import constants as messages
 
+
 # =====================
 # BASE DIRECTORY
 # =====================
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Detect if running on Render (production)
-ON_RENDER = "RENDER" in os.environ
-
-
-# -----------------------------
-# General
-# -----------------------------
+# =====================
+# DEBUG / SECRET KEY
+# =====================
 DEBUG = os.environ.get("DEBUG", "False") == "True"
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY", "your-local-secret-key")
+
+# =====================
+# ALLOWED HOSTS
+# =====================
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
@@ -27,21 +27,34 @@ ALLOWED_HOSTS = [
     "makmedia.tech",
 ]
 
+# =====================
+# DATABASES
+# =====================
+# If DATABASE_URL is set (Render/Postgres), use it. Otherwise, fall back to local SQLite.
+DATABASES = {}
+DATABASE_URL = os.environ.get("DATABASE_URL")
+if DATABASE_URL:
+    DATABASES["default"] = dj_database_url.config(
+        default=DATABASE_URL,
+        conn_max_age=600,
+        ssl_require=True
+    )
+else:
+    # Local dev fallback
+    DATABASES["default"] = {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
 
-# -----------------------------
-# Database (PostgreSQL / DATABASE_URL)
-# -----------------------------
-import dj_database_url
-DATABASES = {
-    "default": dj_database_url.config(conn_max_age=600, ssl_require=True)
-}
+# =====================
+# STATIC FILES
+# =====================
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
-DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
-
-# -----------------------------
-# Security & HTTPS (Render)
-# -----------------------------
-# Detect if running on Render
+# =====================
+# SECURITY & HTTPS (Render)
+# =====================
 ON_RENDER = os.environ.get("RENDER") == "true"
 
 if ON_RENDER:
@@ -51,17 +64,8 @@ if ON_RENDER:
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SAMESITE = "Lax"
     CSRF_COOKIE_SAMESITE = "Lax"
-
-    # ONLY set domains if on your custom domain
-    if "makmedia.tech" in ALLOWED_HOSTS:
-        SESSION_COOKIE_DOMAIN = ".makmedia.tech"
-        CSRF_COOKIE_DOMAIN = ".makmedia.tech"
-
-# -----------------------------
-# Static files
-# -----------------------------
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-STATIC_URL = "/static/"
+    SESSION_COOKIE_DOMAIN = ".makmedia.tech"
+    CSRF_COOKIE_DOMAIN = ".makmedia.tech"
 
 
 # =====================
