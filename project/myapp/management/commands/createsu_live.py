@@ -32,3 +32,7 @@ class Command(BaseCommand):
         )
 
         self.stdout.write("Superuser created successfully.")
+
+        self.stdout.write(
+    f"Existing users: {list(User.objects.values_list('username', flat=True))}"
+)
