@@ -49,10 +49,13 @@ if ON_RENDER:
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-    SESSION_COOKIE_SAMESITE = "Lax"   # important for login to work
+    SESSION_COOKIE_SAMESITE = "Lax"
     CSRF_COOKIE_SAMESITE = "Lax"
-    SESSION_COOKIE_DOMAIN = ".makmedia.tech"
-    CSRF_COOKIE_DOMAIN = ".makmedia.tech"
+
+    # ONLY set domains if on your custom domain
+    if "makmedia.tech" in ALLOWED_HOSTS:
+        SESSION_COOKIE_DOMAIN = ".makmedia.tech"
+        CSRF_COOKIE_DOMAIN = ".makmedia.tech"
 
 # -----------------------------
 # Static files
