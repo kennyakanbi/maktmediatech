@@ -76,6 +76,10 @@ if ON_RENDER:
     CSRF_COOKIE_DOMAIN = ".makmedia.tech"
 
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://maktmediatech.onrender.com",
+]
+
 # =====================
 # INSTALLED APPS
 # =====================
