@@ -72,12 +72,12 @@ if ON_RENDER:
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SAMESITE = "Lax"
     CSRF_COOKIE_SAMESITE = "Lax"
-    SESSION_COOKIE_DOMAIN = ".makmedia.tech"
-    CSRF_COOKIE_DOMAIN = ".makmedia.tech"
-
+   
 
 CSRF_TRUSTED_ORIGINS = [
     "https://maktmediatech.onrender.com",
+    "https://makmedia.tech",
+    "https://www.makmedia.tech",
 ]
 
 # =====================
