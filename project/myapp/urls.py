@@ -1,7 +1,6 @@
 from django.urls import path
 from . import views  
 from django.views.generic import RedirectView
-from .views import check_superuser
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -22,7 +21,4 @@ urlpatterns += [
     path('services', RedirectView.as_view(url='/services/', permanent=True)),
     path('intern', RedirectView.as_view(url='/intern/', permanent=True)),
     path('blog', RedirectView.as_view(url='/blog/', permanent=True)),
-    path("check-superuser/", check_superuser),
 ]
-
-

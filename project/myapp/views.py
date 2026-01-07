@@ -83,12 +83,5 @@ def contact(request):
     return render(request, 'contact.html')
 
 
-from django.http import HttpResponse
-from django.contrib.auth import get_user_model
-
-def check_superuser(request):
-    User = get_user_model()
-    exists = User.objects.filter(username="kenny", is_superuser=True).exists()
-    return HttpResponse(f"Superuser exists? {exists}")
 
     
