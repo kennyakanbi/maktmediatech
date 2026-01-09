@@ -1,0 +1,62 @@
+[
+  {
+    "model": "myapp.blog",
+    "pk": 8,
+    "fields": {
+      "author_name": 1,
+      "title": "Media Advertising Campaigns  Let the World Notice You",
+      "slug": "media-advertising-campaigns-let-the-world-notice-y",
+      "description": "In todays crowded digital space, visibility is not just an advantage  it is survival. ...",
+      "image": "image/upload/v1767460931/magwqsi9rrk4s57xzdvs.jpg",
+      "date_created": "2026-01-03T17:20:17.051Z"
+    }
+  },
+  {
+    "model": "myapp.blog",
+    "pk": 9,
+    "fields": {
+      "author_name": 1,
+      "title": "Welcome to Mak Media Tech Blog",
+      "slug": "welcome-to-mak-media-tech-blog",
+      "description": "In todays fast-paced digital world, every brand needs more than just an online presence  it needs visibility, ...",
+      "image": "image/upload/v1767804842/lpgn1kzkp9h7geokteck.png",
+      "date_created": "2026-01-05T06:01:30.462Z"
+    }
+  },
+  {
+    "model": "myapp.blog",
+    "pk": 10,
+    "fields": {
+      "author_name": 1,
+      "title": "Media & Tech Training: Empowering Skills for the Digital Age",
+      "slug": "media-tech-training-empowering-skills-for-the-digi",
+      "description": "In todays fast-evolving digital world, knowledge is power  and staying ahead means learning the right skills. ...",
+      "image": "image/upload/v1767879886/c9g5ehs3q5kfoljbzsjs.png",
+      "date_created": "2026-01-08T13:42:44.842Z"
+    }
+  },
+  {
+    "model": "myapp.blogimage",
+    "pk": 8,
+    "fields": {
+      "blog": 8,
+      "image": "image/upload/v1767460935/cgoxda5bn70tq62esmrb.png"
+    }
+  },
+  {
+    "model": "myapp.blogimage",
+    "pk": 9,
+    "fields": {
+      "blog": 9,
+      "image": "image/upload/v1767804844/fgxz6ic6oy5foo2potdc.png"
+    }
+  },
+  {
+    "model": "myapp.blogimage",
+    "pk": 10,
+    "fields": {
+      "blog": 10,
+      "image": "image/upload/v1767879888/mli89dv112osfysduj04.png"
+    }
+  }
+]
