@@ -19,17 +19,13 @@ class Contact(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.email}"
-
-
-
-
+    
 
 class Blog(models.Model):
     author_name = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True, blank=True)
     description = models.TextField()
-    # Use only CloudinaryField for images
     image = CloudinaryField('blog_image', blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
 
@@ -38,11 +34,21 @@ class Blog(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.title)
+            base_slug = slugify(self.title)
+            slug = base_slug
+            counter = 1
+
+            while Blog.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+
+            self.slug = slug
+
         super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
+
 
 
 class BlogImage(models.Model):
