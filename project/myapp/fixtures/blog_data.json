@@ -40,7 +40,8 @@
     "pk": 8,
     "fields": {
       "blog": 8,
-      "image": "image/upload/v1767460935/cgoxda5bn70tq62esmrb.png"
+      "image": "image/upload/v1767460935/cgoxda5bn70tq62esmrb.png",
+      "position": 1
     }
   },
   {
@@ -48,7 +49,8 @@
     "pk": 9,
     "fields": {
       "blog": 9,
-      "image": "image/upload/v1767804844/fgxz6ic6oy5foo2potdc.png"
+      "image": "image/upload/v1767804844/fgxz6ic6oy5foo2potdc.png",
+      "position": 1
     }
   },
   {
@@ -56,7 +58,8 @@
     "pk": 10,
     "fields": {
       "blog": 10,
-      "image": "image/upload/v1767879888/mli89dv112osfysduj04.png"
+      "image": "image/upload/v1767879888/mli89dv112osfysduj04.png",
+      "position": 1
     }
   }
 ]
