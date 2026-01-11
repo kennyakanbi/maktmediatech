@@ -33,36 +33,36 @@ class BlogImageInline(admin.TabularInline):
 @admin.register(Blog)
 class BlogAdmin(admin.ModelAdmin):
     form = BlogForm
-
+    prepopulated_fields = {"slug": ("title",)}
     list_display = ("title", "author_name", "date_created", "image_preview")
     list_filter = ("date_created",)
     search_fields = ("title", "description")
-
-    readonly_fields = ("slug", "date_created")
+    readonly_fields = ("date_created",)
     inlines = [BlogImageInline]
 
     fieldsets = (
         (None, {
-            "fields": ("title", "slug", "author_name", "description", "image")
+            "fields": ("title", "slug", "description", "image")
         }),
-        ("Timestamps", {
-            "fields": ("date_created",)
+        ("Author & Time", {
+            "fields": ("author_name", "date_created")
         }),
     )
 
-    # ✅ Auto-assign logged-in user as author
     def save_model(self, request, obj, form, change):
-        if not obj.author_name:
+        if not obj.pk:
             obj.author_name = request.user
         super().save_model(request, obj, form, change)
 
-    # ✅ Safe image preview (Cloudinary)
     def image_preview(self, obj):
         if obj.image:
-            return format_html(
-                '<img src="{}" width="100" style="object-fit:cover;border-radius:6px;" />',
-                obj.image.url
-            )
+            try:
+                return format_html(
+                    '<img src="{}" width="100" style="object-fit: cover;" />',
+                    obj.image.url
+                )
+            except Exception:
+                return "Image not available"
         return "No Image"
 
     image_preview.short_description = "Image"
